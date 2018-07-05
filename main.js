@@ -6,18 +6,17 @@ async function main() {
   const page = await browser.newPage();
   await page.setViewport({ width: 1200, height: 1000 });
   await login(page);
-  await searchStudent(page, "andrew gregory");
+  await searchStudent(page, "brian liew");
   await clickStudentRecord(page);
-  await clickReport(page);
-  await clickDownloadBtn(page);
+  const allHrefs = await findAllHrefs(page);
+  for (let i = 0; i < allHrefs.length; i++) {
+    const href = allHrefs[i];
+    await gotoReportPage(page, href);
+    await clickDownloadBtn(page);
+  }
 }
 
-async function clickDownloadBtn(page) {
-  await page.waitForSelector(".icon2-download");
-  await page.click(".icon2-download");
-}
-
-async function clickReport(page) {
+async function findAllHrefs(page) {
   await page.waitForSelector(".icon-keyboard");
   const allhrefs = await page.$$eval(".js-backbone", links =>
     links.reduce((hrefs, link) => {
@@ -25,7 +24,17 @@ async function clickReport(page) {
       return hrefs;
     }, [])
   );
-  await page.goto(`${allhrefs[0]}`);
+  return allhrefs;
+}
+
+async function clickDownloadBtn(page) {
+  await page.waitForSelector(".icon2-download");
+  await page.click(".icon2-download");
+  await page.waitForNavigation({ waitUntil: "networkidle0" });
+}
+
+async function gotoReportPage(page, href) {
+  await page.goto(`${href}`);
 }
 
 async function clickStudentRecord(page) {
