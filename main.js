@@ -73,6 +73,7 @@ async function login(page) {
   await page.keyboard.type(CREDS.password);
 
   await Promise.all([page.waitForNavigation(), page.click(".signupBtn")]);
+  await page.waitFor(5000);
   await page
     .click(".aurycModalCloseButton")
     .catch(() => console.log("no modal found"));
