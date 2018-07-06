@@ -11,6 +11,7 @@ async function main() {
   for (let i = 0; i < STUDENTS.length; i++) {
     const { name, email } = STUDENTS[i];
     await downloadAllReports(page, name);
+    await downloadAllReports(page, email);
     zipMBAresults(name, email);
     await browser.close();
     browser = await puppeteer.launch({ headless: false, devTools: true });
@@ -20,8 +21,8 @@ async function main() {
   }
 }
 
-async function downloadAllReports(page, name) {
-  await searchStudent(page, name);
+async function downloadAllReports(page, email) {
+  await searchStudent(page, email);
   await clickStudentRecord(page);
   const allHrefs = await findAllHrefs(page);
   for (let i = 0; i < allHrefs.length; i++) {
