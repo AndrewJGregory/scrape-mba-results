@@ -3,6 +3,7 @@ const CREDS = require("./creds");
 const zipMBAresults = require("./zip");
 const path = require("path");
 const fs = require("fs");
+const mail = require("./mail.js");
 
 async function main() {
   const STUDENTS = [{ name: "", email: "" }, { name: "", email: "" }];
@@ -17,7 +18,16 @@ async function main() {
     zipMBAresults(name, email);
     await browser.close();
   }
-  setInterval(deleteMBAFiles, 10000);
+  sendEmails(STUDENTS);
+  setInterval(deleteMBAFiles, 600000);
+}
+
+function sendEmails(STUDENTS) {
+  const transporter = mail.openEmailConnection();
+  for (let i = 0; i < STUDENTS.length; i++) {
+    const { name, email } = STUDENTS[i];
+    mail.emailMBAzip(name, email, transporter);
+  }
 }
 
 function clearConsole() {

@@ -1,7 +1,7 @@
 const nodemailer = require("nodemailer");
 const CREDS = require("./CREDS");
 
-const emailMBAzip = (name, email) => {
+const emailMBAzip = (name, email, transporter) => {
   const fileName = name.replace(" ", "_") + "_MBA_results.zip";
   const mailOptions = {
     from: `${CREDS["email"]}`,
@@ -20,8 +20,8 @@ const emailMBAzip = (name, email) => {
   });
 };
 
-const openEmailConenction = () => {
-  const transporter = nodemailer.createTransport({
+const openEmailConnection = () => {
+  return nodemailer.createTransport({
     service: "gmail",
     auth: {
       user: `${CREDS["email"]}`,
@@ -30,4 +30,4 @@ const openEmailConenction = () => {
   });
 };
 
-module.exports = { emailMBAzip, openEmailConenction };
+module.exports = { emailMBAzip, openEmailConnection };
