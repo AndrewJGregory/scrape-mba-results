@@ -25,7 +25,7 @@ async function downloadAllReports(page, name) {
   for (let i = 0; i < allHrefs.length; i++) {
     const href = allHrefs[i];
     await gotoReportPage(page, href);
-    await clickDownloadBtn(page, name, i);
+    await clickDownloadBtn(page);
   }
 }
 
@@ -40,7 +40,7 @@ async function findAllHrefs(page) {
   return allhrefs;
 }
 
-async function clickDownloadBtn(page, name, i) {
+async function clickDownloadBtn(page) {
   await page.waitForSelector(".icon2-download");
   await page.click(".icon2-download");
   await page.waitFor(10000);
