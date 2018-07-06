@@ -4,21 +4,21 @@ const zipMBAresults = require("./zip");
 
 async function main() {
   const STUDENTS = [{ name: "", email: "" }, { name: "", email: "" }];
+  let browser, page;
+  for (let i = 0; i < STUDENTS.length; i++) {
+    ({ browser, page } = await startSession());
+    const { name, email } = STUDENTS[i];
+    await downloadAllReports(page, email);
+    zipMBAresults(name, email);
+    await browser.close();
+  }
+}
+async function startSession() {
   let browser = await puppeteer.launch({ headless: false, devTools: true });
   let page = await browser.newPage();
   await page.setViewport({ width: 1200, height: 1000 });
   await login(page);
-  for (let i = 0; i < STUDENTS.length; i++) {
-    const { name, email } = STUDENTS[i];
-    await downloadAllReports(page, name);
-    await downloadAllReports(page, email);
-    zipMBAresults(name, email);
-    await browser.close();
-    browser = await puppeteer.launch({ headless: false, devTools: true });
-    page = await browser.newPage();
-    await page.setViewport({ width: 1200, height: 1000 });
-    await login(page);
-  }
+  return { browser, page };
 }
 
 async function downloadAllReports(page, email) {
