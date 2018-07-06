@@ -1,15 +1,17 @@
 const puppeteer = require("puppeteer");
 const CREDS = require("./creds");
+const zipMBAresults = require("./zip");
 
 async function main() {
+  const STUDENTS = [{ name: "", email: "" }, { name: "", email: "" }];
   let browser = await puppeteer.launch({ headless: false, devTools: true });
-  const STUDENTS = [];
   let page = await browser.newPage();
   await page.setViewport({ width: 1200, height: 1000 });
   await login(page);
   for (let i = 0; i < STUDENTS.length; i++) {
-    const name = STUDENTS[i];
+    const { name, email } = STUDENTS[i];
     await downloadAllReports(page, name);
+    zipMBAresults(name, email);
     await browser.close();
     browser = await puppeteer.launch({ headless: false, devTools: true });
     page = await browser.newPage();
