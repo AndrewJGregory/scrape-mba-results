@@ -1,7 +1,7 @@
 const fs = require("fs");
 const archiver = require("archiver");
 
-function writeMBAresults(name, email) {
+const zipMBAresults = (name, email) => {
   const output = fs.createWriteStream(`${name}_MBA_results.zip`);
 
   const archive = archiver("zip", {
@@ -15,4 +15,6 @@ function writeMBAresults(name, email) {
   });
 
   archive.finalize();
-}
+};
+
+module.exports = zipMBAresults;
