@@ -2,17 +2,30 @@ const puppeteer = require("puppeteer");
 const CREDS = require("./creds");
 
 async function main() {
-  const browser = await puppeteer.launch({ headless: false });
-  const page = await browser.newPage();
+  let browser = await puppeteer.launch({ headless: false, devTools: true });
+  const STUDENTS = [];
+  let page = await browser.newPage();
   await page.setViewport({ width: 1200, height: 1000 });
   await login(page);
-  await searchStudent(page, "brian liew");
+  for (let i = 0; i < STUDENTS.length; i++) {
+    const name = STUDENTS[i];
+    await downloadAllReports(page, name);
+    await browser.close();
+    browser = await puppeteer.launch({ headless: false, devTools: true });
+    page = await browser.newPage();
+    await page.setViewport({ width: 1200, height: 1000 });
+    await login(page);
+  }
+}
+
+async function downloadAllReports(page, name) {
+  await searchStudent(page, name);
   await clickStudentRecord(page);
   const allHrefs = await findAllHrefs(page);
   for (let i = 0; i < allHrefs.length; i++) {
     const href = allHrefs[i];
     await gotoReportPage(page, href);
-    await clickDownloadBtn(page);
+    await clickDownloadBtn(page, name, i);
   }
 }
 
@@ -27,10 +40,10 @@ async function findAllHrefs(page) {
   return allhrefs;
 }
 
-async function clickDownloadBtn(page) {
+async function clickDownloadBtn(page, name, i) {
   await page.waitForSelector(".icon2-download");
   await page.click(".icon2-download");
-  await page.waitForNavigation({ waitUntil: "networkidle0" });
+  await page.waitFor(10000);
 }
 
 async function gotoReportPage(page, href) {
@@ -56,9 +69,10 @@ async function login(page) {
   await page.click("#password");
   await page.keyboard.type(CREDS.password);
 
-  await page.click(".signupBtn");
-
-  await page.waitForNavigation();
+  await Promise.all([page.waitForNavigation(), page.click(".signupBtn")]);
+  await page
+    .click(".aurycModalCloseButton")
+    .catch(() => console.log("no modal found"));
 }
 
 main();
