@@ -1,6 +1,8 @@
 const puppeteer = require("puppeteer");
 const CREDS = require("./creds");
 const zipMBAresults = require("./zip");
+const path = require("path");
+const fs = require("fs");
 
 async function main() {
   const STUDENTS = [{ name: "", email: "" }, { name: "", email: "" }];
@@ -12,6 +14,7 @@ async function main() {
     zipMBAresults(name, email);
     await browser.close();
   }
+  deleteMBAFiles();
 }
 async function startSession() {
   let browser = await puppeteer.launch({ headless: false, devTools: true });
@@ -77,6 +80,20 @@ async function login(page) {
   await page
     .click(".aurycModalCloseButton")
     .catch(() => console.log("no modal found"));
+}
+
+function deleteMBAFiles() {
+  const directory = "/Users/andrewgregory/Downloads";
+  fs.readdir(directory, (err, fileNames) => {
+    for (const name of fileNames) {
+      const shouldDelete = name.includes("Report_MBA__");
+      if (shouldDelete) {
+        fs.unlink(path.resolve(directory, name), () =>
+          console.log(`Deleted ${name}`)
+        );
+      }
+    }
+  });
 }
 
 main();
