@@ -14,8 +14,9 @@ async function main() {
     zipMBAresults(name, email);
     await browser.close();
   }
-  deleteMBAFiles();
+  setInterval(deleteMBAFiles, 10000);
 }
+
 async function startSession() {
   let browser = await puppeteer.launch({ headless: false, devTools: true });
   let page = await browser.newPage();
