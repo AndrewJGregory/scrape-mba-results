@@ -7,14 +7,21 @@ const fs = require("fs");
 async function main() {
   const STUDENTS = [{ name: "", email: "" }, { name: "", email: "" }];
   let browser, page;
+  clearConsole();
   for (let i = 0; i < STUDENTS.length; i++) {
     ({ browser, page } = await startSession());
     const { name, email } = STUDENTS[i];
+    console.log(`Starting ${name}, student #${i + 1}:\n`);
     await downloadAllReports(page, email);
+    console.log(`\nFinished downloading for ${name}.\n`);
     zipMBAresults(name, email);
     await browser.close();
   }
   setInterval(deleteMBAFiles, 10000);
+}
+
+function clearConsole() {
+  process.stdout.write("\033c");
 }
 
 async function startSession() {
@@ -32,6 +39,7 @@ async function downloadAllReports(page, email) {
   for (let i = 0; i < allHrefs.length; i++) {
     const href = allHrefs[i];
     await gotoReportPage(page, href);
+    console.log(`Downloading report #${i + 1}...`);
     await clickDownloadBtn(page);
   }
 }
