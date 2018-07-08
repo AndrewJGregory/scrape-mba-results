@@ -4,9 +4,10 @@ const zipMBAresults = require("./zip");
 const path = require("path");
 const fs = require("fs");
 const mail = require("./mail.js");
+const PATHS = require("./PATHS");
 
 async function main() {
-  const STUDENTS = [{ name: "", email: "" }, { name: "", email: "" }];
+  const STUDENTS = [{ name: "", email: "" }];
   let browser, page;
   clearConsole();
   for (let i = 0; i < STUDENTS.length; i++) {
@@ -102,7 +103,7 @@ async function login(page) {
 }
 
 function deleteMBAFiles() {
-  const directory = "/Users/andrewgregory/Downloads";
+  const directory = `${PATHS["download"]}`;
   fs.readdir(directory, (err, fileNames) => {
     for (const name of fileNames) {
       const shouldDelete = name.includes("Report_MBA__");

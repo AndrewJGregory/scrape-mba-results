@@ -1,5 +1,6 @@
 const nodemailer = require("nodemailer");
 const CREDS = require("./CREDS");
+const PATHS = require("./PATHS");
 
 const emailMBAzip = (name, email, transporter) => {
   const fileName = name.replace(" ", "_") + "_MBA_results.zip";
@@ -9,14 +10,14 @@ const emailMBAzip = (name, email, transporter) => {
     subject: "MBA results",
     attachments: [
       {
-        path: `/Users/andrewgregory/Desktop/repos/scrape-mba-results/${fileName}`
+        path: `${PATHS["repo"]}${fileName}`
       }
     ]
   };
 
   transporter.sendMail(mailOptions, (err, info) => {
     if (err) console.log(err);
-    else console.log(`Finished sending email to ${name}...`);
+    else console.log(`Fianished sending email to ${name}...`);
   });
 };
 

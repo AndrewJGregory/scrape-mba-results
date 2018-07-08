@@ -1,5 +1,6 @@
 const fs = require("fs");
 const archiver = require("archiver");
+const PATHS = require("./PATHS");
 
 const zipMBAresults = (name, email) => {
   const output = fs.createWriteStream(
@@ -15,7 +16,7 @@ const zipMBAresults = (name, email) => {
   // instead, it replaces the '@' with a '_'
   const formattedEmail = email.replace("@", "_");
   archive.glob(`Report_MBA__*${formattedEmail}*.pdf`, {
-    cwd: "/Users/andrewgregory/Downloads"
+    cwd: `${PATHS["download"]}`
   });
 
   archive.finalize();
