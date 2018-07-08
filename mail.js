@@ -17,7 +17,7 @@ const emailMBAzip = (name, email, transporter) => {
 
   transporter.sendMail(mailOptions, (err, info) => {
     if (err) console.log(err);
-    else console.log(`Fianished sending email to ${name}...`);
+    else console.log(`Finished sending email to ${name}...`);
   });
 };
 
