@@ -78,10 +78,10 @@ async function clickStudentRecord(page) {
   await page.click(".candidate-row");
 }
 
-async function searchStudent(page, name) {
+async function searchStudent(page, email) {
   await page.waitForSelector("#candidate-search-box-gl");
   await page.click("#candidate-search-box-gl");
-  await page.keyboard.type(name);
+  await page.keyboard.type(email);
   await page.keyboard.press("Enter");
   await page.waitForNavigation({ waitUntil: "networkidle0" });
 }
