@@ -3,7 +3,7 @@ const { CREDS, PATHS, STUDENTS } = require("./constants");
 const zipMBAresults = require("./zip");
 const path = require("path");
 const fs = require("fs");
-const mail = require("./mail.js");
+const { openEmailConnection, emailMBAzip } = require("./mail");
 
 async function main() {
   let browser, page;
@@ -22,10 +22,10 @@ async function main() {
 }
 
 function sendEmails() {
-  const transporter = mail.openEmailConnection();
+  const transporter = openEmailConnection();
   for (let i = 0; i < STUDENTS.length; i++) {
     const { name, email } = STUDENTS[i];
-    mail.emailMBAzip(name, email, transporter);
+    emailMBAzip(name, email, transporter);
   }
 }
 
