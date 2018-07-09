@@ -79,6 +79,7 @@ async function clickStudentRecord(page) {
 }
 
 async function searchStudent(page, name) {
+  await page.waitForSelector("#candidate-search-box-gl");
   await page.click("#candidate-search-box-gl");
   await page.keyboard.type(name);
   await page.keyboard.press("Enter");
@@ -94,10 +95,6 @@ async function login(page) {
   await page.keyboard.type(CREDS["HackerRank"]["password"]);
 
   await Promise.all([page.waitForNavigation(), page.click(".signupBtn")]);
-  await page.waitFor(5000);
-  await page
-    .click(".aurycModalCloseButton")
-    .catch(() => console.log("no modal found"));
 }
 
 function deleteMBAFiles() {
