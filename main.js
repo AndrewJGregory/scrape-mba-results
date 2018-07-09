@@ -88,10 +88,10 @@ async function searchStudent(page, name) {
 async function login(page) {
   await page.goto("https://www.hackerrank.com/work/login");
   await page.click("#email");
-  await page.keyboard.type(CREDS.username);
+  await page.keyboard.type(CREDS["HackerRank"]["username"]);
 
   await page.click("#password");
-  await page.keyboard.type(CREDS.password);
+  await page.keyboard.type(CREDS["HackerRank"]["password"]);
 
   await Promise.all([page.waitForNavigation(), page.click(".signupBtn")]);
   await page.waitFor(5000);

@@ -4,7 +4,7 @@ const { CREDS, PATHS } = require("./constants");
 const emailMBAzip = (name, email, transporter) => {
   const fileName = name.replace(" ", "_") + "_MBA_results.zip";
   const mailOptions = {
-    from: `${CREDS["email"]}`,
+    from: `${CREDS["email"]["address"]}`,
     to: `${email}`,
     subject: "MBA results",
     attachments: [
@@ -24,8 +24,8 @@ const openEmailConnection = () => {
   return nodemailer.createTransport({
     service: "gmail",
     auth: {
-      user: `${CREDS["email"]}`,
-      pass: `${CREDS["email_password"]}`
+      user: `${CREDS["email"]["address"]}`,
+      pass: `${CREDS["email"]["password"]}`
     }
   });
 };
