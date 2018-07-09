@@ -1,6 +1,5 @@
 const nodemailer = require("nodemailer");
-const CREDS = require("./CREDS");
-const PATHS = require("./PATHS");
+const { CREDS, PATHS } = require("./constants");
 
 const emailMBAzip = (name, email, transporter) => {
   const fileName = name.replace(" ", "_") + "_MBA_results.zip";

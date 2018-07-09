@@ -1,13 +1,11 @@
 const puppeteer = require("puppeteer");
-const CREDS = require("./creds");
+const { CREDS, PATHS, STUDENTS } = require("./constants");
 const zipMBAresults = require("./zip");
 const path = require("path");
 const fs = require("fs");
 const mail = require("./mail.js");
-const PATHS = require("./PATHS");
 
 async function main() {
-  const STUDENTS = [{ name: "", email: "" }];
   let browser, page;
   clearConsole();
   for (let i = 0; i < STUDENTS.length; i++) {
@@ -19,11 +17,11 @@ async function main() {
     zipMBAresults(name, email);
     await browser.close();
   }
-  sendEmails(STUDENTS);
+  sendEmails();
   setInterval(deleteMBAFiles, 600000);
 }
 
-function sendEmails(STUDENTS) {
+function sendEmails() {
   const transporter = mail.openEmailConnection();
   for (let i = 0; i < STUDENTS.length; i++) {
     const { name, email } = STUDENTS[i];
@@ -69,7 +67,7 @@ async function findAllHrefs(page) {
 async function clickDownloadBtn(page) {
   await page.waitForSelector(".icon2-download");
   await page.click(".icon2-download");
-  await page.waitFor(10000);
+  await page.waitFor(2000);
 }
 
 async function gotoReportPage(page, href) {
