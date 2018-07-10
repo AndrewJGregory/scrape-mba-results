@@ -78,7 +78,7 @@ const STUDENTS = [
 module.exports = { CREDS, PATHS, STUDENTS };
 ```
 
-`PATHS["download"]` and `PATHS["repo"]` should the appropriate paths as well. `STUDENTS` is an array of objects with keys of name and email.
+`PATHS["download"]` and `PATHS["repo"]` should be the appropriate paths as well. `STUDENTS` is an array of objects with keys of name and email.
 
 Second, to allow `nodemailer` to automatically send email from your email address, log into your gmail account and go to its settings. Sign-in & security => Apps with account access => check "Allow less secure apps".
 
