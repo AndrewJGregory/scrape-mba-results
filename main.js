@@ -18,7 +18,7 @@ async function main() {
     await browser.close();
   }
   sendEmails();
-  setInterval(deleteMBAFiles, 600000);
+  setTimeout(deleteMBAFiles, 600000);
 }
 
 function sendEmails() {
