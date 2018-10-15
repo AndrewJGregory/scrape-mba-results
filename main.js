@@ -59,15 +59,21 @@ async function findAllHrefs(page) {
     links.reduce((hrefs, link) => {
       if (link.innerText === "View Report") hrefs.push(link.href);
       return hrefs;
-    }, [])
+    }, []),
   );
   return allhrefs;
 }
 
 async function clickDownloadBtn(page) {
   await page.waitForSelector(".icon2-download");
-  await page.click(".icon2-download");
-  await page.waitFor(2000);
+  await page.evaluate(() => document.querySelector(".icon2-download").click());
+  await page.waitForSelector(".js-pdfprogress");
+  await page.waitForFunction(() =>
+    document
+      .querySelector(".js-pdfprogress")
+      .innerHTML.includes("Your report is ready."),
+  ),
+    await page.waitFor(1000);
 }
 
 async function gotoReportPage(page, href) {
@@ -75,7 +81,8 @@ async function gotoReportPage(page, href) {
 }
 
 async function clickStudentRecord(page) {
-  await page.click(".candidate-row");
+  await page.waitForSelector(".candidate-row", { visible: true });
+  await page.evaluate(() => document.querySelector(".candidate-row").click());
 }
 
 async function searchStudent(page, email) {
@@ -95,6 +102,9 @@ async function login(page) {
   await page.keyboard.type(CREDS["HackerRank"]["password"]);
 
   await Promise.all([page.waitForNavigation(), page.click(".signupBtn")]);
+  await page
+    .click(".aurycModalCloseButton")
+    .catch(() => console.log("no modal found"));
 }
 
 function deleteMBAFiles() {
@@ -104,7 +114,7 @@ function deleteMBAFiles() {
       const shouldDelete = name.includes("Report_MBA__");
       if (shouldDelete) {
         fs.unlink(path.resolve(directory, name), () =>
-          console.log(`Deleted ${name}`)
+          console.log(`Deleted ${name}`),
         );
       }
     }
