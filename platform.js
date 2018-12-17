@@ -6,8 +6,7 @@ class Platform {
     const browser = await puppeteer.launch({ headless: false, devTools: true });
     const page = await browser.newPage();
     await page.setViewport({ width: 1200, height: 1000 });
-    this.page = page;
-    this.browser = browser;
+    return { page, browser };
   }
 
   clearConsole() {
