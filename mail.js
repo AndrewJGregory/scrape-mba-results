@@ -5,13 +5,13 @@ const emailMBAzip = (name, email, transporter) => {
   const fileName = name.replace(" ", "_") + "_MBA_results.zip";
   const mailOptions = {
     from: `${CREDS["email"]["address"]}`,
-    to: `${email}`,
+    to: `${email}, agregory@appacademy.io, dcatalano@appacademy.io, jfehrman@appacademy.io`,
     subject: "MBA results",
     attachments: [
       {
-        path: `${PATHS["repo"]}${fileName}`
-      }
-    ]
+        path: `${PATHS["repo"]}${fileName}`,
+      },
+    ],
   };
 
   transporter.sendMail(mailOptions, (err, info) => {
@@ -25,8 +25,8 @@ const openEmailConnection = () => {
     service: "gmail",
     auth: {
       user: `${CREDS["email"]["address"]}`,
-      pass: `${CREDS["email"]["password"]}`
-    }
+      pass: `${CREDS["email"]["password"]}`,
+    },
   });
 };
 
