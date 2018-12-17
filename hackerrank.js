@@ -3,6 +3,7 @@ const { CREDS, PATHS, STUDENTS } = require("./constants");
 const zipMBAresults = require("./zip");
 const path = require("path");
 const { openEmailConnection, emailMBAzip } = require("./mail");
+const Platform = require("./platform");
 
 class HackerRank extends Platform {
   async main() {
