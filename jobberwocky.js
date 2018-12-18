@@ -18,12 +18,12 @@ class Jobberwocky extends Platform {
     ]);
   }
 
-  async writeIds() {
+  async writeIds(students) {
     let id;
     await this.page.goto("https://progress.appacademy.io/jobberwocky");
-    for (let i = 0; i < STUDENTS.length; i++) {
+    for (let i = 0; i < students.length; i++) {
       await this.page.click("input[placeholder]");
-      await this.page.keyboard.type(STUDENTS[i]["name"], { delay: 100 });
+      await this.page.keyboard.type(students[i]["name"], { delay: 100 });
       /* delay is necessary here because of the specific way that
        the input field works on jobberwocky: it auto-suggests names
        as one types, if the name is typed instantly with no delay then
@@ -34,26 +34,26 @@ class Jobberwocky extends Platform {
         this.page.keyboard.press("Enter"),
       ]);
       id = this.page.url().match(/\d+/)[0];
-      console.log(`NAME: ${STUDENTS[i]["name"]}, ID: ${id}`);
-      STUDENTS[i]["id"] = id;
+      console.log(`NAME: ${students[i]["name"]}, ID: ${id}`);
+      students[i]["id"] = id;
     }
   }
 
-  async writeEmails() {
+  async writeEmails(students) {
     let email;
     const emailCSSselector =
       "body > main > section > section > section > article.contact-info.block > table > tbody > tr:nth-child(4) > td:nth-child(2) > a";
     await this.page.goto("https://progress.appacademy.io/");
-    for (let i = 0; i < STUDENTS.length; i++) {
+    for (let i = 0; i < students.length; i++) {
       await Promise.all([
         this.page.goto(
-          `https://progress.appacademy.io/students/${STUDENTS[i]["id"]}`,
+          `https://progress.appacademy.io/students/${students[i]["id"]}`,
         ),
         this.page.waitForNavigation({ waitUntil: "networkidle0" }),
       ]);
       email = await this.page.$eval(emailCSSselector, link => link.innerHTML);
-      console.log(`name: ${STUDENTS[i]["name"]}, email: ${email}`);
-      STUDENTS[i]["email"] = email;
+      console.log(`name: ${students[i]["name"]}, email: ${email}`);
+      students[i]["email"] = email;
     }
   }
 }
