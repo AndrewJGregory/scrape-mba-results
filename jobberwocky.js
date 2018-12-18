@@ -1,6 +1,5 @@
-const fs = require("fs");
 const puppeteer = require("puppeteer");
-const { CREDS, PATHS, STUDENTS } = require("./constants");
+const { CREDS } = require("./constants");
 const Platform = require("./platform");
 
 class Jobberwocky extends Platform {
