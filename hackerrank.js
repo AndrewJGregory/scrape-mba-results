@@ -71,18 +71,13 @@ class HackerRank extends Platform {
     await page.waitFor(1500);
   }
 
-  async clickStudentRecord(page) {
-    // hangs here
-    await page.waitForSelector(".candidate-row");
-    await page.click(".candidate-row");
+  async clickStudentRecord() {
+    this.page.click(".candidate-row");
   }
 
-  async searchStudent(page, email) {
-    await page.waitForSelector("#candidate-search-box-gl");
-    await page.click("#candidate-search-box-gl");
-    await page.keyboard.type(email);
-    await page.keyboard.press("Enter");
-    await page.waitForNavigation({ waitUntil: "networkidle0" });
+  async searchStudent(email) {
+    await this.page.goto(`https://www.hackerrank.com/x/search/${email}`);
+    await this.page.waitForSelector(".candidate-row");
   }
 
   async login(page) {
@@ -93,10 +88,10 @@ class HackerRank extends Platform {
     await page.click("#password");
     await page.keyboard.type(CREDS["HackerRank"]["password"]);
 
-    await Promise.all([page.waitForNavigation(), page.click(".signupBtn")]);
-    await page
-      .click(".aurycModalCloseButton")
-      .catch(() => console.log("no modal found"));
+    await Promise.all([
+      this.page.waitForNavigation(),
+      this.page.click(".signupBtn"),
+    ]);
   }
 
   deleteMBAFiles() {
