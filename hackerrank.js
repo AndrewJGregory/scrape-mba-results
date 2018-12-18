@@ -6,20 +6,6 @@ const { openEmailConnection, emailMBAzip } = require("./mail");
 const Platform = require("./platform");
 
 class HackerRank extends Platform {
-  async main() {
-    this.clearConsole();
-    const { browser, page } = await this.startSession();
-    await login(page);
-    for (let i = 0; i < STUDENTS.length; i++) {
-      const { name, email } = STUDENTS[i];
-      console.log(`Starting ${name}, student #${i + 1}:\n`);
-      await this.downloadAllReports(page, email);
-      console.log(`\nFinished downloading for ${name}.\n`);
-      this.zipMBAresults(name, email);
-      await browser.close();
-    }
-  }
-
   sendEmails() {
     const transporter = openEmailConnection();
     for (let i = 0; i < STUDENTS.length; i++) {
@@ -28,21 +14,21 @@ class HackerRank extends Platform {
     }
   }
 
-  async downloadAllReports(page, email) {
-    await searchStudent(page, email);
-    await clickStudentRecord(page);
-    const allHrefs = await findAllHrefs(page);
+  async downloadAllReports(email) {
+    await searchStudent(email);
+    await clickStudentRecord();
+    const allHrefs = await findAllHrefs();
     for (let i = 0; i < allHrefs.length; i++) {
       const href = allHrefs[i];
-      await page.goto(href);
+      await this.page.goto(href);
       console.log(`Downloading report #${i + 1}...`);
-      await clickDownloadBtn(page);
+      await clickDownloadBtn();
     }
   }
 
-  async findAllHrefs(page) {
-    await page.waitForSelector(".icon-keyboard");
-    const allhrefs = await page.$$eval(".js-backbone", links =>
+  async findAllHrefs() {
+    await this.page.waitForSelector(".icon-keyboard");
+    const allhrefs = await this.page.$$eval(".js-backbone", links =>
       links.reduce((hrefs, link) => {
         if (
           link.innerText === "View Report" &&
@@ -55,20 +41,20 @@ class HackerRank extends Platform {
     return allhrefs;
   }
 
-  async clickDownloadBtn(page) {
-    await page.waitForSelector(".icon2-download");
-    await page.evaluate(() =>
+  async clickDownloadBtn() {
+    await this.page.waitForSelector(".icon2-download");
+    await this.page.evaluate(() =>
       document.querySelector(".icon2-download").click(),
     );
-    await page.waitForSelector(".js-pdfprogress", { timeout: 0 });
-    await page.waitForFunction(
+    await this.page.waitForSelector(".js-pdfprogress", { timeout: 0 });
+    await this.page.waitForFunction(
       () =>
         document
           .querySelector(".js-pdfprogress")
           .innerHTML.includes("Your report is ready."),
       { timeout: 0 },
     );
-    await page.waitFor(1500);
+    await this.page.waitFor(1500);
   }
 
   async clickStudentRecord() {
@@ -80,13 +66,13 @@ class HackerRank extends Platform {
     await this.page.waitForSelector(".candidate-row");
   }
 
-  async login(page) {
-    await page.goto("https://www.hackerrank.com/work/login");
-    await page.click("#email");
-    await page.keyboard.type(CREDS["HackerRank"]["username"]);
+  async login() {
+    await this.page.goto("https://www.hackerrank.com/work/login");
+    await this.page.click("#email");
+    await this.page.keyboard.type(CREDS["HackerRank"]["username"]);
 
-    await page.click("#password");
-    await page.keyboard.type(CREDS["HackerRank"]["password"]);
+    await this.page.click("#password");
+    await this.page.keyboard.type(CREDS["HackerRank"]["password"]);
 
     await Promise.all([
       this.page.waitForNavigation(),
