@@ -41,6 +41,27 @@ class HackerRank extends Platform {
     return allhrefs;
   }
 
+  async getScores() {
+    const innerHTML = el => el.innerHTML;
+    const allHrefs = await this.findAllHrefs();
+    const MBAs = [];
+    for (let i = 0; i < allHrefs.length; i++) {
+      const href = allHrefs[i];
+      await this.page.goto(href);
+      await this.page.waitForSelector(".scored");
+      const percentageScore = await this.page.$eval(".scored", innerHTML);
+      const totalScore = await this.page.$eval(".max-score", innerHTML);
+      const subjectSelector =
+        "#report-tab-content-container > div > div > div.row.mjB > div.span-xs-8.span-md-10.no-padding._ar_hide_ > table > tbody > tr:nth-child(3) > td:nth-child(2) > strong";
+      const subjectEl = await this.page.$eval(subjectSelector, innerHTML);
+      if (subjectEl.innerHTML.includes("MBA")) {
+        const subject = subjectEl.innerHTML.slice(5);
+        const MBA = { percentageScore, totalScore, subject };
+        MBAs.push(MBA);
+      }
+    }
+    return MBAs;
+  }
   async clickDownloadBtn() {
     await this.page.waitForSelector(".icon2-download");
     await this.page.evaluate(() =>
