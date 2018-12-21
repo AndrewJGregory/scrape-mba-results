@@ -1,25 +1,28 @@
-const puppeteer = require("puppeteer");
-const { CREDS, PATHS, STUDENTS } = require("./constants");
-const zipMBAresults = require("./zip");
-const path = require("path");
-const fs = require("fs");
-const { openEmailConnection, emailMBAzip } = require("./mail");
+const HackerRank = require("./hackerrank");
+const JobberWocky = require("./jobberwocky");
+const Platform = require("./platform");
+const { STUDENTS } = require("./constants");
+const { openEmailConnection, emailMBAscores } = require("./mail");
 
-async function main() {
-  let browser, page;
-  clearConsole();
-  for (let i = 0; i < STUDENTS.length; i++) {
-    ({ browser, page } = await startSession());
-    const { name, email } = STUDENTS[i];
-    console.log(`Starting ${name}, student #${i + 1}:\n`);
-    await downloadAllReports(page, email);
-    console.log(`\nFinished downloading for ${name}.\n`);
-    zipMBAresults(name, email);
-    await browser.close();
-  }
-  sendEmails();
-  setTimeout(deleteMBAFiles, 600000);
-}
+const main = async () => {
+  const platform = new Platform();
+  platform.clearConsole();
+  const { browser, page } = await platform.startSession();
+  const jobberWocky = new JobberWocky();
+  const hackerRank = new HackerRank();
+  jobberWocky.page = page;
+  hackerRank.page = page;
+  await hackerRank.login();
+  await browser.close();
+};
+
+const writeStudentInfo = async (jobberWocky, platform) => {
+  const newStudents = STUDENTS.slice();
+  await jobberWocky.login();
+  await jobberWocky.writeIds(newStudents);
+  await jobberWocky.writeEmails(newStudents);
+  platform.writeToFile(newStudents);
+};
 
 function sendEmails() {
   const transporter = openEmailConnection();
