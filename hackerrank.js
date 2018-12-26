@@ -30,11 +30,9 @@ class HackerRank extends Platform {
     await this.page.waitForSelector(".icon-keyboard");
     const allhrefs = await this.page.$$eval(".js-backbone", links =>
       links.reduce((hrefs, link) => {
-        if (
-          link.innerText === "View Report" &&
-          !link.href.includes("interviews")
-        )
-          hrefs.push(link.href);
+        const isMBALink =
+          link.innerText === "View Report" && !link.href.includes("interviews");
+        if (isMBALink) hrefs.push(link.href);
         return hrefs;
       }, []),
     );
