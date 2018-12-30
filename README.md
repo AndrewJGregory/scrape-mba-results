@@ -8,14 +8,13 @@ Our students take thirteen Market Based Assessments (MBAs) through HackerRank th
 - [archiver](https://github.com/archiverjs/node-archiver), to compress multiple files into one zipped archive
 - [nodemailer](https://github.com/nodemailer/nodemailer), to automatically send the final email to each student with the appropriate attached .zip file
 
-
 ### Previous Workflow
 
 1. Search for student
 2. Click the correct student to display all reports
 3. For each MBA test, click "View Report" which redirects to a new page, then click the download button.
 4. Go back to all reports page, repeat step 3.
-4. Repeat for a new student.
+5. Repeat for a new student.
 
 Using myself as an example, this is what the above workflow looks like for only **three** reports instead of all thirteen: (click to play)
 
@@ -35,7 +34,7 @@ Second, I tried making a Chrome extension that would automate this task using jQ
 2. Open all of them in new tabs
 3. Let the Chrome extension download all of the reports in the background.
 
-[Opening all of the links in another tab](https://developer.mozilla.org/en-US/docs/Web/API/Window/open) is fairly easy, but for some reason I could not figure out why only *some* of the reports would download, not all of them. There seemed to be no pattern to this, or not one that I could deduce anyway. After a few hours of hair pulling, I knew that there had to be another way.
+[Opening all of the links in another tab](https://developer.mozilla.org/en-US/docs/Web/API/Window/open) is fairly easy, but for some reason I could not figure out why only _some_ of the reports would download, not all of them. There seemed to be no pattern to this, or not one that I could deduce anyway. After a few hours of hair pulling, I knew that there had to be another way.
 
 Third, I started thinking what is exactly I am trying to do. In a way, I'm trying to "scrape" a website for data. So I googled around for scraping tools and came across [selenium](https://github.com/SeleniumHQ/selenium). I tried using it but it seemed like overkill for what I wanted to accomplish. Eventually I came across [puppeteer](https://github.com/GoogleChrome/puppeteer/) and everything started to finally come together.
 
@@ -63,16 +62,16 @@ First, create a file, `constants.js`, that exports three different objects:
 ```javascript
 const CREDS = {
   HackerRank: { username: "xxx", password: "xxx" },
-  email: { address: "xxx", password: "xxx" }
+  email: { address: "xxx", password: "xxx" },
 };
 
 const PATHS = {
   download: "/Users/andrewgregory/Downloads",
-  repo: "/Users/andrewgregory/Desktop/repos/scrape-mba-results/"
+  repo: "/Users/andrewgregory/Desktop/repos/scrape-mba-results/",
 };
 
 const STUDENTS = [
-  { name: "Andrew Gregory", email: "andrewjgregoryajg@gmail.com" }
+  { name: "Andrew Gregory", email: "andrewjgregoryajg@gmail.com" },
 ];
 
 module.exports = { CREDS, PATHS, STUDENTS };
@@ -89,7 +88,6 @@ Then `cd` into the repo directory and run `node main.js`.
 #### Execution:
 
 For the same three reports, the workflow now looks like this:
-
 
 <a href="http://www.youtube.com/watch?feature=player_embedded&v=06ElqxY4w6U
 " target="_blank"><img src="http://img.youtube.com/vi/06ElqxY4w6U/0.jpg"
@@ -119,21 +117,3 @@ After a student's search result is clicked, a page comes up listing out all of t
 Here, `page` is an object of puppeteer. `.$$eval` is equivalent to `Array.from(document.getElementsByClassName('js-backbone'))`, which is returned as a parameter in the second argument of `.$$eval`. Reducing this array (filtering then mapping would be equivalent yet longer) gives all the URLs we need.
 
 These URLs are used because they are iterated through, wait for the page to load, then click the download button.
-
-### Where to go next?
-
-#### Download button
-
-There are a few things that can be improved upon despite all of this working. First, the logic for waiting until the download to complete is barbaric:
-
-```js
-async function clickDownloadBtn(page) {
-  await page.waitForSelector(".icon2-download");
-  await page.click(".icon2-download");
-  await page.waitFor(12000);
-}
-```
-
-Yes, that's really waiting for 12 seconds after clicking the download button. When the download button is clicked the download begins however I could not figure out an easy way to detect that this request finished. I tried [`.waitForNavigation`](https://github.com/GoogleChrome/puppeteer/blob/v1.1.1/docs/api.md#pagewaitfornavigationoptions) and this worked... most of the time. There seemed to be no pattern to when it would not work: the program would go through downloading all reports for 3-4 students then after downloading a seemingly random report and finishing that download the program would just stop. `.waitForNavigation` seemed to never complete so the program could not continue. I feel like this is not the most semantic approach either because puppeteer defines a navigation event as the URL changing but clicking the download button does not change the URL.
-
-I tried using the [`response`](https://github.com/GoogleChrome/puppeteer/blob/v1.1.1/docs/api.md#class-response) class of puppeteer but this did not work either. There has to be a better way to wait the exact length of time it takes to download the report before continuing rather than an arbitrarily long amount of time. Most reports only take 2 seconds to download, however some take 10+ seconds.
