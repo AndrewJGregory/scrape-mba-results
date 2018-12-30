@@ -77,7 +77,7 @@ class HackerRank extends Platform {
   }
 
   async clickStudentRecord() {
-    this.page.click(".candidate-row");
+    await this.page.click(".candidate-row");
   }
 
   async searchStudent(email) {
