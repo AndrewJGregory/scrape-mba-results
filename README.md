@@ -102,12 +102,18 @@ The most important part about this is that after setup and running the file, eve
 After a student's search result is clicked, a page comes up listing out all of the MBAs with a link of "View Report". This search result page is only visited once, and all of the links of "View Report" are grabbed to store the associated `href`s of all of them. The general approach was noticing some sort of similarity between all of the "View Report" links. I noticed that they all had the same class, `.js-backbone`. This is not specific enough to select from because there are around 60 elements on the page with this class. What the links did have in common was their `innerText`, which is "View Report". Armed with this knowledge, executing the following gives an array of all `href` links:
 
 ```js
-const allhrefs = await page.$$eval(".js-backbone", links =>
-    links.reduce((hrefs, link) => {
-      if (link.innerText === "View Report") hrefs.push(link.href);
-      return hrefs;
-    }, [])
-  );
+  async findAllHrefs() {
+    await this.page.waitForSelector(".icon-keyboard");
+    const allhrefs = await this.page.$$eval(".js-backbone", links =>
+      links.reduce((hrefs, link) => {
+        const isMBALink =
+          link.innerText === "View Report" && !link.href.includes("interviews");
+        if (isMBALink) hrefs.push(link.href);
+        return hrefs;
+      }, []),
+    );
+    return allhrefs;
+  }
 ```
 
 Here, `page` is an object of puppeteer. `.$$eval` is equivalent to `Array.from(document.getElementsByClassName('js-backbone'))`, which is returned as a parameter in the second argument of `.$$eval`. Reducing this array (filtering then mapping would be equivalent yet longer) gives all the URLs we need.
