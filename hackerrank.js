@@ -15,14 +15,14 @@ class HackerRank extends Platform {
   }
 
   async downloadAllReports(email) {
-    await searchStudent(email);
-    await clickStudentRecord();
-    const allHrefs = await findAllHrefs();
+    await this.searchStudent(email);
+    await this.clickStudentRecord();
+    const allHrefs = await this.findAllHrefs();
     for (let i = 0; i < allHrefs.length; i++) {
       const href = allHrefs[i];
       await this.page.goto(href);
       console.log(`Downloading report #${i + 1}...`);
-      await clickDownloadBtn();
+      await this.clickDownloadBtn();
     }
   }
 
