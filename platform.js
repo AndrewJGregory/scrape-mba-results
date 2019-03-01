@@ -13,8 +13,11 @@ class Platform {
     process.stdout.write("\x1Bc");
   }
 
-  writeToFile(obj) {
-    fs.writeFile("./writtenFile.js", JSON.stringify(obj), function(err) {
+  writeToFile(obj, name) {
+    const result = `STUDENTS = ${JSON.stringify(
+      obj,
+    )}; module.exports = STUDENTS;`;
+    fs.writeFile(name, result, function(err) {
       if (err) console.log(err);
     });
   }
