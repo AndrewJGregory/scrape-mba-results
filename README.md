@@ -57,27 +57,37 @@ This "one then all" approach is extremely efficient and allows for testing in sm
 
 #### Setup:
 
-First, create a file, `constants.js`, that exports three different objects:
+First, create a folder named `config` and make two files in it named `creds.js` and `paths.js` following the structure below. There will be a `students.js` file however this will be created by parsing a CSV file obtained from Salesforce.
 
 ```javascript
+// creds.js
 const CREDS = {
   HackerRank: { username: "xxx", password: "xxx" },
   email: { address: "xxx", password: "xxx" },
 };
 
+module.exports = CREDS;
+
+// paths.js
 const PATHS = {
   download: "/Users/andrewgregory/Downloads",
   repo: "/Users/andrewgregory/Desktop/repos/scrape-mba-results/",
 };
 
+module.exports = PATHS;
+
+// students.js
+
 const STUDENTS = [
-  { name: "Andrew Gregory", email: "andrewjgregoryajg@gmail.com" },
+  {
+    name: "Andrew Gregory",
+    email: "AndrewJGregoryAJG@gmail.com",
+    careerCoach: "A",
+  },
 ];
 
-module.exports = { CREDS, PATHS, STUDENTS };
+module.exports = STUDENTS;
 ```
-
-`PATHS["download"]` and `PATHS["repo"]` should be the appropriate paths as well. `STUDENTS` is an array of objects with keys of name and email.
 
 Second, to allow `nodemailer` to automatically send email from your email address, log into your gmail account and go to its settings. Sign-in & security => Apps with account access => check "Allow less secure apps".
 
