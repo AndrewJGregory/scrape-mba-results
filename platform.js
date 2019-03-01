@@ -21,6 +21,25 @@ class Platform {
       if (err) console.log(err);
     });
   }
+
+  async parseCsvToObj(filePath) {
+    const students = await new Promise(resolve => {
+      const result = [];
+      fs.readFile(filePath, "utf8", (err, data) => {
+        if (err) throw err;
+        data
+          .split("\n")
+          .slice(1)
+          .forEach(str => {
+            let [name, careerCoach, email] = str.replace(/\"/g, "").split(",");
+            careerCoach = careerCoach[0].toUpperCase();
+            result.push({ name, email, careerCoach });
+          });
+        resolve(result);
+      });
+    });
+    this.writeToFile(students, "./config/students.js");
+  }
 }
 
 module.exports = Platform;
