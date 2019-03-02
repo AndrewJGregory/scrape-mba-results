@@ -23,22 +23,31 @@ class Platform {
   }
 
   async parseCsvToObj(filePath) {
-    const students = await new Promise(resolve => {
+    return new Promise((resolve, reject) => {
       const result = [];
       fs.readFile(filePath, "utf8", (err, data) => {
-        if (err) throw err;
-        data
-          .split("\n")
-          .slice(1)
-          .forEach(str => {
-            let [name, careerCoach, email] = str.replace(/\"/g, "").split(",");
-            careerCoach = careerCoach[0].toUpperCase();
-            result.push({ name, email, careerCoach });
-          });
-        resolve(result);
+        if (err) {
+          reject(err);
+        } else {
+          data
+            .split("\n")
+            .slice(1)
+            .forEach(str => {
+              let [name, careerCoach, email] = str
+                .replace(/\"/g, "")
+                .split(",");
+              careerCoach = careerCoach
+                ? careerCoach[0].toUpperCase()
+                : "NO CAREER COACH";
+              result.push({ name, email, careerCoach });
+            });
+          resolve(result);
+        }
       });
-    });
-    this.writeToFile(students, "./config/students.js");
+    }).then(
+      students => this.writeToFile(students, "./config/students.js"),
+      err => console.log(err),
+    );
   }
 }
 
