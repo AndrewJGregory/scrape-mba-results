@@ -3,3 +3,4 @@ paths.js
 students.js
 .DS_Store
 *.zip
+*.csv
