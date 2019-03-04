@@ -1,6 +1,6 @@
 const fs = require("fs");
 const archiver = require("archiver");
-const { PATHS } = require("./constants");
+const PATHS = require("./config/paths");
 
 const zipMBAresults = (name, email) => {
   const output = fs.createWriteStream(

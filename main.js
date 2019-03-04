@@ -1,7 +1,7 @@
 const HackerRank = require("./hackerrank");
 const JobberWocky = require("./jobberwocky");
 const Platform = require("./platform");
-const { STUDENTS } = require("./constants");
+const STUDENTS = require("./config/students");
 const { openEmailConnection, emailMBAscores } = require("./mail");
 
 const main = async () => {
