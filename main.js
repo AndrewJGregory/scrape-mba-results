@@ -1,5 +1,4 @@
 const HackerRank = require("./hackerrank");
-const JobberWocky = require("./jobberwocky");
 const Platform = require("./platform");
 const STUDENTS = require("./config/students");
 const { openEmailConnection, emailMBAscores } = require("./mail");
@@ -8,20 +7,10 @@ const main = async () => {
   const platform = new Platform();
   platform.clearConsole();
   const { browser, page } = await platform.startSession();
-  const jobberWocky = new JobberWocky();
   const hackerRank = new HackerRank();
-  jobberWocky.page = page;
   hackerRank.page = page;
   await hackerRank.login();
   await browser.close();
-};
-
-const writeStudentInfo = async (jobberWocky, platform) => {
-  const newStudents = STUDENTS.slice();
-  await jobberWocky.login();
-  await jobberWocky.writeIds(newStudents);
-  await jobberWocky.writeEmails(newStudents);
-  platform.writeToFile(newStudents);
 };
 
 const sendScores = async hackerRank => {
