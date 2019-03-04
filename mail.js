@@ -51,7 +51,7 @@ const emailMBAscores = (student, transporter) => {
   return transporter.sendMail(mailOptions);
 };
 
-const emailMBAzip = (name, email, transporter) => {
+const emailMBAzip = async (name, email, transporter) => {
   const fileName = name.replace(" ", "_") + "_MBA_results.zip";
   const mailOptions = {
     from: `${CREDS["email"]["address"]}`,
@@ -64,10 +64,19 @@ const emailMBAzip = (name, email, transporter) => {
     ],
   };
 
-  transporter.sendMail(mailOptions, (err, info) => {
-    if (err) console.log(err);
-    else console.log(`Finished sending email to ${name}...`);
-  });
+  return new Promise((resolve, reject) => {
+    transporter.sendMail(mailOptions, (err, info) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(name);
+        console.log("HERE");
+      }
+    });
+  }).then(
+    name => console.log(`Finished sending email to ${name}`),
+    err => console.log(err),
+  );
 };
 
 const openEmailConnection = () => {
