@@ -6,11 +6,11 @@ const { openEmailConnection, emailMBAzip } = require("./mail");
 const Platform = require("./platform");
 
 class HackerRank extends Platform {
-  sendEmails() {
+  async sendEmails() {
     const transporter = openEmailConnection();
     for (let i = 0; i < STUDENTS.length; i++) {
       const { name, email } = STUDENTS[i];
-      emailMBAzip(name, email, transporter);
+      await emailMBAzip(name, email, transporter);
     }
   }
 
