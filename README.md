@@ -107,23 +107,26 @@ The most important part about this is that after setup and running the file, eve
 
 ### Cool code snippet
 
-After a student's search result is clicked, a page comes up listing out all of the MBAs with a link of "View Report". This search result page is only visited once, and all of the links of "View Report" are grabbed to store the associated `href`s of all of them. The general approach was noticing some sort of similarity between all of the "View Report" links. I noticed that they all had the same class, `.js-backbone`. This is not specific enough to select from because there are around 60 elements on the page with this class. What the links did have in common was their `innerText`, which is "View Report". Armed with this knowledge, executing the following gives an array of all `href` links:
+All throughout the code I've utilized `async`/`await` because it's much easier to read through. However, there were asynchronous functions in node that use callbacks. An example of these is reading and parsing a file. The end goal is to `await` this reading/parsing since that is the style of the code everywhere. Here is the promisification of this node callback:
 
 ```js
-  async findAllHrefs() {
-    await this.page.waitForSelector(".icon-keyboard");
-    const allhrefs = await this.page.$$eval(".js-backbone", links =>
-      links.reduce((hrefs, link) => {
-        const isMBALink =
-          link.innerText === "View Report" && !link.href.includes("interviews");
-        if (isMBALink) hrefs.push(link.href);
-        return hrefs;
-      }, []),
+async parseCsvToObj(filePath) {
+    return new Promise((resolve, reject) => {
+      const result = [];
+      fs.readFile(filePath, "utf8", (err, data) => {
+        if (err) {
+          reject(err);
+        } else {
+         // data manipulation to get name, email, and careerCoach
+          result.push({ name, email, careerCoach });
+          resolve(result);
+        }
+      });
+    }).then(
+      students => this.writeToFile(students, "./config/students.js"),
+      err => console.log(err),
     );
-    return allhrefs;
   }
 ```
 
-Here, `page` is an object of puppeteer. `.$$eval` is equivalent to `Array.from(document.getElementsByClassName('js-backbone'))`, which is returned as a parameter in the second argument of `.$$eval`. Reducing this array (filtering then mapping would be equivalent yet longer) gives all the URLs we need.
-
-These URLs are used because they are iterated through, wait for the page to load, then click the download button.
+The `async` keyword is unnecessary here since `await` is not used within the function, but I think including it here makes the function more clear as to what it does.
