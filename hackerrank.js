@@ -1,8 +1,6 @@
-const puppeteer = require("puppeteer");
 const CREDS = require("./config/creds");
 const STUDENTS = require("./config/students");
 const PATHS = require("./config/paths");
-const zipMBAresults = require("./zip");
 const path = require("path");
 const { openEmailConnection, emailMBAzip } = require("./mail");
 const Platform = require("./platform");
