@@ -14,8 +14,8 @@ class HackerRank extends Platform {
     }
   }
 
-  async downloadAllReports(email) {
-    await this.searchStudent(email);
+  async downloadAllReports(student) {
+    await this.search(student);
     await this.clickStudentRecord();
     const allHrefs = await this.findAllHrefs();
     for (let i = 0; i < allHrefs.length; i++) {
@@ -85,13 +85,19 @@ class HackerRank extends Platform {
       await this.page.goto(
         `https://www.hackerrank.com/x/search/${student.email}`,
       );
-      await this.page.waitForSelector(".candidate-row", { timeout: 3000 });
+      await this.page.waitForSelector(".candidate-row", { timeout: 5000 });
     } catch (e) {
       await this.page.$eval("#candidate-search-box-gl", el => (el.value = ""));
       await this.page.click("#candidate-search-box-gl");
       await this.page.keyboard.type(student.name);
       await this.page.keyboard.press("Enter");
       await this.page.waitForSelector(".candidate-row");
+      const correctEmail = await this.page.$eval(
+        ".candidate-row",
+        row => row.children[1].innerText,
+      );
+      student.email = correctEmail;
+      await this.updateFile(student);
     }
   }
 
