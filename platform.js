@@ -60,7 +60,8 @@ class Platform {
         }
       });
     }).then(
-      students => this.writeToFile(students, "./config/students.js"),
+      async students =>
+        await this.writeToFile(students, "./config/students.js"),
       err => console.log(err),
     );
   }
