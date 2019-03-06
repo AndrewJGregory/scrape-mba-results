@@ -80,9 +80,19 @@ class HackerRank extends Platform {
     await this.page.click(".candidate-row");
   }
 
-  async searchStudent(email) {
-    await this.page.goto(`https://www.hackerrank.com/x/search/${email}`);
-    await this.page.waitForSelector(".candidate-row");
+  async search(student) {
+    try {
+      await this.page.goto(
+        `https://www.hackerrank.com/x/search/${student.email}`,
+      );
+      await this.page.waitForSelector(".candidate-row", { timeout: 3000 });
+    } catch (e) {
+      await this.page.$eval("#candidate-search-box-gl", el => (el.value = ""));
+      await this.page.click("#candidate-search-box-gl");
+      await this.page.keyboard.type(student.name);
+      await this.page.keyboard.press("Enter");
+      await this.page.waitForSelector(".candidate-row");
+    }
   }
 
   async login() {
