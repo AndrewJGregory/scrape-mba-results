@@ -1,6 +1,6 @@
 const puppeteer = require("puppeteer");
 const fs = require("fs");
-
+const STUDENTS = require("./config/students");
 class Platform {
   async startSession() {
     const browser = await puppeteer.launch({ headless: false, devTools: true });
