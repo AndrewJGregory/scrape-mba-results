@@ -13,13 +13,24 @@ class Platform {
     process.stdout.write("\x1Bc");
   }
 
-  writeToFile(obj, name) {
+  async writeToFile(obj, name) {
     const result = `STUDENTS = ${JSON.stringify(
       obj,
     )}; module.exports = STUDENTS;`;
-    fs.writeFile(name, result, function(err) {
-      if (err) console.log(err);
-    });
+    return new Promise((resolve, reject) => {
+      fs.writeFile(name, result, function(err) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve();
+        }
+      });
+    }).then(
+      () => console.log(`successfully wrote ${name}`),
+      () => console.log(err),
+    );
+  }
+
   }
 
   async parseCsvToObj(filePath) {
