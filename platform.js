@@ -31,6 +31,10 @@ class Platform {
     );
   }
 
+  async updateFile(newStudent) {
+    const idx = STUDENTS.findIndex(student => student.name === newStudent.name);
+    STUDENTS[idx] = newStudent;
+    await this.writeToFile(STUDENTS, "./config/students.js");
   }
 
   async parseCsvToObj(filePath) {
