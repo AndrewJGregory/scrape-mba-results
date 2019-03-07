@@ -57,7 +57,7 @@ const emailMBAzip = async (name, email, transporter) => {
   const mailOptions = {
     from: `${CREDS["email"]["address"]}`,
     to: `${email}, agregory@appacademy.io, dcatalano@appacademy.io, jfehrman@appacademy.io`,
-    subject: "MBA results",
+    subject: `MBA results for ${name}`,
     attachments: [
       {
         path: `${PATHS["repo"]}${fileName}`,
@@ -71,7 +71,6 @@ const emailMBAzip = async (name, email, transporter) => {
         reject(err);
       } else {
         resolve(name);
-        console.log("HERE");
       }
     });
   }).then(
