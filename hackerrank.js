@@ -1,19 +1,9 @@
 const CREDS = require("./config/creds");
-const STUDENTS = require("./config/students");
 const PATHS = require("./config/paths");
 const path = require("path");
-const { openEmailConnection, emailMBAzip } = require("./mail");
 const Platform = require("./platform");
 
 class HackerRank extends Platform {
-  async sendEmails() {
-    const transporter = openEmailConnection();
-    for (let i = 0; i < STUDENTS.length; i++) {
-      const { name, email } = STUDENTS[i];
-      await emailMBAzip(name, email, transporter);
-    }
-  }
-
   async downloadAllReports(student) {
     await this.search(student);
     await this.clickStudentRecord();
