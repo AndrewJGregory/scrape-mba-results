@@ -90,4 +90,40 @@ const openEmailConnection = () => {
   });
 };
 
-module.exports = { emailMBAzip, openEmailConnection, emailMBAscores };
+const sendReminderEmail = async (name, email, subjectsToDo, transporter) => {
+  const startHTML = `Hello ${name.split(" ")[0]}. You have ${
+    subjectsToDo.length
+  } MBAs to finish. They are the following: `;
+  let middleHTML = `<ul>`;
+  subjectsToDo.forEach(subj => (middleHTML += `<li>${subj}</li>`));
+  middleHTML += "</ul>";
+  const endHTML = `If you have not completed them within one week, you will receive one strike. Once you have completed 
+  these, please email career-coaches-ny@appacademy.io and we will send you 
+  all of your results. Thank you.`;
+  const mailOptions = {
+    from: `${CREDS["email"]["address"]}`,
+    to: `${email}, agregory@appacademy.io, dcatalano@appacademy.io, jfehrman@appacademy.io`,
+    subject: `${subjectsToDo.length} MBAs Left To Do`,
+    html: startHTML + middleHTML + endHTML,
+  };
+
+  return new Promise((resolve, reject) => {
+    transporter.sendMail(mailOptions, (err, info) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(name);
+      }
+    });
+  }).then(
+    name => console.log(`Finished sending reminder email to ${name}`),
+    err => console.log(err),
+  );
+};
+
+module.exports = {
+  emailMBAzip,
+  openEmailConnection,
+  emailMBAscores,
+  sendReminderEmail,
+};
