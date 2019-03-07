@@ -1,6 +1,8 @@
 const puppeteer = require("puppeteer");
 const fs = require("fs");
+const path = require("path");
 const STUDENTS = require("./config/students");
+const PATHS = require("./config/paths");
 class Platform {
   async startSession() {
     const browser = await puppeteer.launch({ headless: false, devTools: true });
@@ -64,6 +66,19 @@ class Platform {
         await this.writeToFile(students, "./config/students.js"),
       err => console.log(err),
     );
+  }
+
+  deleteMBAFiles() {
+    const directory = `${PATHS["download"]}`;
+    fs.readdir(directory, (err, fileNames) => {
+      for (const name of fileNames) {
+        if (name.includes("Report_MBA__")) {
+          fs.unlink(path.resolve(directory, name), () =>
+            console.log(`Deleted ${name}`),
+          );
+        }
+      }
+    });
   }
 }
 

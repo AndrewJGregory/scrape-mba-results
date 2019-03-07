@@ -1,6 +1,4 @@
 const CREDS = require("./config/creds");
-const PATHS = require("./config/paths");
-const path = require("path");
 const Platform = require("./platform");
 
 class HackerRank extends Platform {
@@ -115,20 +113,6 @@ class HackerRank extends Platform {
       this.page.waitForNavigation(),
       this.page.click(".signupBtn"),
     ]);
-  }
-
-  deleteMBAFiles() {
-    const directory = `${PATHS["download"]}`;
-    fs.readdir(directory, (err, fileNames) => {
-      for (const name of fileNames) {
-        const shouldDelete = name.includes("Report_MBA__");
-        if (shouldDelete) {
-          fs.unlink(path.resolve(directory, name), () =>
-            console.log(`Deleted ${name}`),
-          );
-        }
-      }
-    });
   }
 }
 
