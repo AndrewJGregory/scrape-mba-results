@@ -26,6 +26,18 @@ class HackerRank extends Platform {
     }
   }
 
+  async findFinishedSubjects(student) {
+    await this.search(student);
+    await this.clickStudentRecord();
+    await this.page.waitForSelector(".icon-keyboard");
+    const result = await this.page.$$eval(".pull-left.content_box", els =>
+      els
+        .filter(el => el.innerText.includes("Attempted"))
+        .map(el => el.children[0].innerText.slice(5)),
+    );
+    return result;
+  }
+
   async findAllHrefs() {
     await this.page.waitForSelector(".icon-keyboard");
     const allhrefs = await this.page.$$eval(".js-backbone", links =>
