@@ -28,13 +28,12 @@ class HackerRank extends Platform {
 
   async findAllHrefs() {
     await this.page.waitForSelector(".icon-keyboard");
-    const allhrefs = await this.page.$$eval(".js-backbone", links =>
-      links.reduce((hrefs, link) => {
-        const isMBALink =
-          link.innerText === "View Report" && !link.href.includes("interviews");
-        if (isMBALink) hrefs.push(link.href);
-        return hrefs;
-      }, []),
+    const allhrefs = await this.page.$$eval(".pull-left.content_box", links =>
+      links
+        .filter(a => a.innerText.includes("View Report"))
+        .map(a => a.children)
+        .filter(a => !a[0].innerText.includes("App Academy Admissions"))
+        .map(a => a[1].children[0].href),
     );
     return allhrefs;
   }
