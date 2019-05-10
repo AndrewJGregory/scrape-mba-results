@@ -50,13 +50,8 @@ class Platform {
             .split("\n")
             .slice(1)
             .forEach(str => {
-              let [name, careerCoach, email] = str
-                .replace(/\"/g, "")
-                .split(",");
-              careerCoach = careerCoach
-                ? careerCoach[0].toUpperCase()
-                : "NO CAREER COACH";
-              result.push({ name, email, careerCoach });
+              const [name, email] = str.replace(/\"/g, "").split(",");
+              result.push({ name, email });
             });
           resolve(result);
         }
