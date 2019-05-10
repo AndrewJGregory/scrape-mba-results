@@ -36,10 +36,9 @@ class HackerRank extends Platform {
     await this.page.waitForSelector(".icon-keyboard");
     const allhrefs = await this.page.$$eval(".pull-left.content_box", links =>
       links
-        .filter(a => a.innerText.includes("View Report"))
-        .map(a => a.children)
-        .filter(a => !a[0].innerText.includes("App Academy Admissions"))
-        .map(a => a[1].children[0].href),
+        .map(link => [...link.querySelectorAll("a")])
+        .filter(arr => arr.length === 2 && arr[0].innerText.includes("MBA: "))
+        .map(arr => arr[1].href),
     );
     return allhrefs;
   }
