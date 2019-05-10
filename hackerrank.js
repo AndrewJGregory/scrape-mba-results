@@ -1,4 +1,4 @@
-const CREDS = require("./config/creds");
+const { CREDS } = require("./config/creds");
 const Platform = require("./platform");
 
 class HackerRank extends Platform {

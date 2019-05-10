@@ -1,5 +1,5 @@
 const nodemailer = require("nodemailer");
-const CREDS = require("./config/creds");
+const { CREDS } = require("./config/creds");
 const PATHS = require("./config/paths");
 const ALL_COACHES = require("./config/creds");
 
