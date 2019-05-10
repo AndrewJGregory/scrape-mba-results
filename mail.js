@@ -1,6 +1,7 @@
 const nodemailer = require("nodemailer");
 const CREDS = require("./config/creds");
 const PATHS = require("./config/paths");
+const ALL_COACHES = require("./config/creds");
 
 const emailMBAscores = (student, transporter) => {
   const { email, name, MBAs } = student;
@@ -44,7 +45,7 @@ const emailMBAscores = (student, transporter) => {
 
   const mailOptions = {
     from: `${CREDS["email"]["address"]}`,
-    to: `${email}, agregory@appacademy.io, dcatalano@appacademy.io, jfehrman@appacademy.io`,
+    to: `${email}, ${ALL_COACHES}`,
     subject: `MBA results for ${name}`,
     html,
   };
@@ -56,7 +57,7 @@ const emailMBAzip = async (name, email, transporter) => {
   const fileName = name.replace(" ", "_") + "_MBA_results.zip";
   const mailOptions = {
     from: `${CREDS["email"]["address"]}`,
-    to: `${email}, agregory@appacademy.io, dcatalano@appacademy.io, jfehrman@appacademy.io`,
+    to: `${email}, ${ALL_COACHES}`,
     subject: `MBA results for ${name}`,
     attachments: [
       {
@@ -101,7 +102,7 @@ const sendReminderEmail = async (name, email, subjectsToDo, transporter) => {
   all of your results. Thank you.`;
   const mailOptions = {
     from: `${CREDS["email"]["address"]}`,
-    to: `${email}, agregory@appacademy.io, dcatalano@appacademy.io, jfehrman@appacademy.io`,
+    to: `${email}, ${ALL_COACHES}`,
     subject: `${subjectsToDo.length} MBAs Left To Do`,
     html: startHTML + middleHTML + endHTML,
   };
