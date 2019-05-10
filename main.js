@@ -33,17 +33,35 @@ const main = async () => {
   const transporter = openEmailConnection();
   for (let i = 0; i < STUDENTS.length; i++) {
     const { name, email } = STUDENTS[i];
-    const finishedSubjects = await hackerRank.findFinishedSubjects(STUDENTS[i]);
-    const subjectsToDo = ALL_SUBJECTS.filter(
-      subj => !finishedSubjects.includes(subj),
-    );
-    if (subjectsToDo.length > 0) {
-      await sendReminderEmail(name, email, subjectsToDo, transporter);
-    } else {
+    // const finishedSubjects = await hackerRank.findFinishedSubjects(STUDENTS[i]);
+    // const subjectsToDo = ALL_SUBJECTS.filter(
+    //   subj => !finishedSubjects.includes(subj),
+    // );
+    // if (subjectsToDo.length > 0) {
+    // console.log(name + " has " + subjectsToDo.length + " left");
+    // await sendReminderEmail(name, email, subjectsToDo, transporter);
+    // } else {
+    try {
+      console.log(`Starting ${name}...`);
       await hackerRank.downloadAllReports(STUDENTS[i]);
-      await zipMBAresults(name, email);
-      await emailMBAzip(name, email, transporter);
+      const reportCount = await hackerRank.countMBAFiles(email);
+      if (reportCount > 0) {
+        console.log(
+          `Finished ${++hackerRank.finishedStudents} students out of ${
+            STUDENTS.length
+          }`,
+        );
+        await zipMBAresults(name, email);
+        await emailMBAzip(name, `agregory@appacademy.io`, transporter);
+      } else {
+        console.log(`${name} has 0 MBAs.`);
+        hackerRank.finishedStudents++;
+      }
+    } catch (e) {
+      hackerRank.finishedStudents++;
+      console.log(e);
     }
+    // }
   }
   await browser.close();
 };
