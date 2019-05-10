@@ -2,6 +2,12 @@ const { CREDS } = require("./config/creds");
 const Platform = require("./platform");
 
 class HackerRank extends Platform {
+  constructor(page) {
+    super();
+    this.page = page;
+    this.finishedStudents = 0;
+  }
+
   async downloadAllReports(student) {
     await this.search(student);
     await this.clickStudentRecord();

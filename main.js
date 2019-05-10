@@ -28,8 +28,7 @@ const main = async () => {
   const platform = new Platform();
   platform.clearConsole();
   const { browser, page } = await platform.startSession();
-  const hackerRank = new HackerRank();
-  hackerRank.page = page;
+  const hackerRank = new HackerRank(page);
   await hackerRank.login();
   const transporter = openEmailConnection();
   for (let i = 0; i < STUDENTS.length; i++) {
