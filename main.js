@@ -63,6 +63,7 @@ const main = async () => {
     }
     // }
   }
+  platform.deleteMBAFiles();
   await browser.close();
 };
 
