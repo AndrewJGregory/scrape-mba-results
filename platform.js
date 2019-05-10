@@ -75,6 +75,22 @@ class Platform {
       }
     });
   }
+
+  async countMBAFiles(email) {
+    const newEmail = email.replace("@", "_");
+    let count = 0;
+    const directory = `${PATHS["download"]}`;
+    return new Promise(resolve => {
+      fs.readdir(directory, (err, fileNames) => {
+        for (const name of fileNames) {
+          if (name.includes(newEmail)) {
+            count++;
+          }
+        }
+        resolve(count);
+      });
+    });
+  }
 }
 
 module.exports = Platform;
