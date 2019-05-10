@@ -1,7 +1,7 @@
 const nodemailer = require("nodemailer");
 const { CREDS } = require("./config/creds");
 const PATHS = require("./config/paths");
-const ALL_COACHES = require("./config/creds");
+const { ALL_COACHES } = require("./config/creds");
 
 const emailMBAscores = (student, transporter) => {
   const { email, name, MBAs } = student;
