@@ -31,6 +31,7 @@ const main = async () => {
   const hackerRank = new HackerRank(page);
   await hackerRank.login();
   const transporter = openEmailConnection();
+  const unfinishedStudents = [];
   for (let i = 0; i < STUDENTS.length; i++) {
     const { name, email } = STUDENTS[i];
     // const finishedSubjects = await hackerRank.findFinishedSubjects(STUDENTS[i]);
@@ -52,9 +53,10 @@ const main = async () => {
           }`,
         );
         await zipMBAresults(name, email);
-        await emailMBAzip(name, `agregory@appacademy.io`, transporter);
+        await emailMBAzip(name, email, transporter);
       } else {
         console.log(`${name} has 0 MBAs.`);
+        unfinishedStudents.push({ name, email });
         hackerRank.finishedStudents++;
       }
     } catch (e) {
@@ -63,6 +65,7 @@ const main = async () => {
     }
     // }
   }
+  console.log(unfinishedStudents);
   platform.deleteMBAFiles();
   await browser.close();
 };
