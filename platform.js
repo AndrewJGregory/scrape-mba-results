@@ -65,15 +65,24 @@ class Platform {
 
   deleteMBAFiles() {
     const directory = `${PATHS["download"]}`;
-    fs.readdir(directory, (err, fileNames) => {
-      for (const name of fileNames) {
-        if (name.includes("Report_MBA__")) {
-          fs.unlink(path.resolve(directory, name), () =>
-            console.log(`Deleted ${name}`),
-          );
+    let count = 0;
+    return new Promise((resolve, reject) => {
+      fs.readdir(directory, (err, fileNames) => {
+        if (err) reject(err);
+        for (const name of fileNames) {
+          if (name.includes("Report_MBA__")) {
+            count++;
+            fs.unlink(path.resolve(directory, name), () =>
+              console.log(`Deleted ${name}`),
+            );
+          }
         }
-      }
-    });
+        resolve(count);
+      });
+    }).then(
+      count => console.log(`deleted ${count} MBA files`),
+      err => console.log(err),
+    );
   }
 
   async countMBAFiles(email) {
