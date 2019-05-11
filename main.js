@@ -32,6 +32,7 @@ const main = async () => {
   await hackerRank.login();
   const transporter = openEmailConnection();
   const unfinishedStudents = [];
+  await platform.deleteMBAFiles();
   for (let i = 0; i < STUDENTS.length; i++) {
     const { name, email } = STUDENTS[i];
     // const finishedSubjects = await hackerRank.findFinishedSubjects(STUDENTS[i]);
@@ -66,7 +67,7 @@ const main = async () => {
     // }
   }
   console.log(unfinishedStudents);
-  platform.deleteMBAFiles();
+  await platform.deleteMBAFiles();
   await browser.close();
 };
 
