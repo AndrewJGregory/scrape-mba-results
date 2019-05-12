@@ -63,7 +63,7 @@ class Platform {
     );
   }
 
-  deleteMBAFiles() {
+  async deleteMBAFiles() {
     const directory = `${PATHS["download"]}`;
     let count = 0;
     return new Promise((resolve, reject) => {
