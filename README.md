@@ -117,8 +117,8 @@ async parseCsvToObj(filePath) {
         if (err) {
           reject(err);
         } else {
-         // data manipulation to get name, email, and careerCoach
-          result.push({ name, email, careerCoach });
+         // data manipulation to get name and email
+          result.push({ name, email });
           resolve(result);
         }
       });
@@ -129,4 +129,4 @@ async parseCsvToObj(filePath) {
   }
 ```
 
-The `async` keyword is unnecessary here since `await` is not used within the function, but I think including it here makes the function more clear as to what it does.
+The `async` keyword is unnecessary here since `await` is not used within the function, but I think including it here makes the function more clear as to what it does. Plus, Prettier suggests that the function can be converted to an `async` function anyway.
